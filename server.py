@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, flash, render_template, request, redirect
 import csv
+
 app = Flask(__name__)
+app.secret_key = 'Some key to work with sessions'
 
 
 @app.route('/')
@@ -29,6 +31,7 @@ def submit_contact_form():
     try:
         data = request.form.to_dict()
         write_form_submittion(data)
-        return redirect('/thankyou.html')
+        flash('Thanks for your message, I`ll answer it as soon as possible!')
+        return redirect('/contact.html')
     except:
         return 'Could not save to database'
