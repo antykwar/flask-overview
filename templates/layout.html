@@ -47,17 +47,18 @@
 
     {% block page_content %}{% endblock %}
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+    {% if self._TemplateReference__context.name != 'index.html' %}
+      <footer class="footer-container text-center">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              <p>© UNTITLED | Website created with <a href="http://www.mashup-template.com/" title="Create website with free html template">Mashup Template</a>/<a href="https://www.unsplash.com/" title="Beautiful Free Images">Unsplash</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    {% endif %}
 
-    {% block footer %}{% endblock %}
     {% block scripts %}{% endblock %}
 
     <script type="text/javascript" src="./static/main.70a66962.js"></script>

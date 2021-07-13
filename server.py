@@ -1,5 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect
 import csv
+from incomlete_form_exception import IncompleteFormException
 
 app = Flask(__name__)
 app.secret_key = 'Some key to work with sessions'
@@ -22,6 +23,8 @@ def write_form_submittion(data):
         email = data['email']
         subject = data['subject']
         message = data['message']
+        if not (email and (subject or message)):
+            raise IncompleteFormException('empty-form')
         csv_writer = csv.writer(database, delimiter=',', quoting=csv.QUOTE_MINIMAL, quotechar='"')
         csv_writer.writerow([email, subject, message])
 
@@ -31,7 +34,10 @@ def submit_contact_form():
     try:
         data = request.form.to_dict()
         write_form_submittion(data)
-        flash('Thanks for your message, I`ll answer it as soon as possible!')
-        return redirect('/contact.html')
+        flash('Thanks for your message, I`ll answer it as soon as possible!', 'contact_submit_success')
+    except IncompleteFormException:
+        flash('Please fill email and subject or message :)', 'contact_submit_error')
     except:
-        return 'Could not save to database'
+        flash('Oops, something went wrong :( Please try to contact me on social networks.', 'contact_submit_error')
+    finally:
+        return redirect('/contact.html')
